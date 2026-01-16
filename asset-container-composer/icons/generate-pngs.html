@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Icon Generator</title>
+  <style>
+    body { font-family: system-ui; padding: 40px; background: #1a1a1e; color: white; }
+    .icon-container { display: flex; gap: 40px; margin-bottom: 40px; }
+    .icon-box { text-align: center; }
+    canvas { border: 1px solid #333; margin-bottom: 10px; display: block; }
+    button { 
+      padding: 8px 16px; 
+      background: linear-gradient(135deg, #8b5cf6, #d946ef);
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover { opacity: 0.9; }
+    h1 { margin-bottom: 30px; }
+    p { color: #888; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Icon Generator</h1>
+  <p>Click each button to download the PNG icon file. Save them in the icons folder.</p>
+  
+  <div class="icon-container">
+    <div class="icon-box">
+      <canvas id="icon16" width="16" height="16"></canvas>
+      <button onclick="download('icon16', 16)">Download 16x16</button>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon48" width="48" height="48"></canvas>
+      <button onclick="download('icon48', 48)">Download 48x48</button>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon128" width="128" height="128"></canvas>
+      <button onclick="download('icon128', 128)">Download 128x128</button>
+    </div>
+  </div>
+
+  <script>
+    function drawIcon(ctx, size) {
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#8b5cf6');
+      gradient.addColorStop(1, '#d946ef');
+      
+      // Rounded rect background
+      const radius = size * 0.15;
+      ctx.beginPath();
+      ctx.roundRect(0, 0, size, size, radius);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      
+      // Draw layered rectangles
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.beginPath();
+      ctx.roundRect(size * 0.15, size * 0.2, size * 0.35, size * 0.25, size * 0.03);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.beginPath();
+      ctx.roundRect(size * 0.52, size * 0.35, size * 0.33, size * 0.4, size * 0.03);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.beginPath();
+      ctx.roundRect(size * 0.22, size * 0.52, size * 0.28, size * 0.28, size * 0.03);
+      ctx.fill();
+    }
+    
+    function download(canvasId, size) {
+      const canvas = document.getElementById(canvasId);
+      const link = document.createElement('a');
+      link.download = `icon-${size}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+    
+    // Draw all icons on load
+    window.onload = function() {
+      [16, 48, 128].forEach(size => {
+        const canvas = document.getElementById(`icon${size}`);
+        const ctx = canvas.getContext('2d');
+        drawIcon(ctx, size);
+      });
+    };
+  </script>
+</body>
+</html>

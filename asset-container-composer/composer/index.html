@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Container Composer</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Layers Panel -->
+      <aside class="panel layers-panel">
+        <div class="layers-logo">
+          <span class="logo-icon">📦</span>
+          <span class="logo-text">Asset Container Composer</span>
+        </div>
+        <div class="panel-header">
+          <h2>Layers</h2>
+          <div class="layers-actions">
+            <button class="btn btn-icon" id="addLayerBtn" title="Add Layer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 8v8M8 12h8"/>
+              </svg>
+            </button>
+            <div class="more-menu">
+              <button class="btn btn-icon" id="moreMenuBtn" title="More">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="5" r="2"/>
+                  <circle cx="12" cy="12" r="2"/>
+                  <circle cx="12" cy="19" r="2"/>
+                </svg>
+              </button>
+              <div class="menu-dropdown" id="moreMenu" hidden>
+                <button class="menu-item" id="clearAll" type="button">
+                  Clear All
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-content">
+          <!-- Image layers container -->
+          <div class="layers-list" id="layersList">
+            <!-- Layers will be added here dynamically -->
+            
+            <!-- Background layer (always present) -->
+            <div class="layer-item layer-background" data-layer-id="background">
+            <div class="layer-order-group">
+              <div class="layer-drag-handle">
+                <svg width="16" height="28" viewBox="0 0 20 56" fill="currentColor">
+                  <circle cx="4" cy="6" r="1.8"/><circle cx="16" cy="6" r="1.8"/>
+                  <circle cx="4" cy="22" r="1.8"/><circle cx="16" cy="22" r="1.8"/>
+                  <circle cx="4" cy="38" r="1.8"/><circle cx="16" cy="38" r="1.8"/>
+                  <circle cx="4" cy="54" r="1.8"/><circle cx="16" cy="54" r="1.8"/>
+                </svg>
+              </div>
+              <span class="layer-order-badge">BG</span>
+            </div>
+            <div class="layer-thumbnail layer-thumbnail-bg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+              </svg>
+            </div>
+            <div class="layer-info">
+              <span class="layer-name">Background</span>
+              <span class="layer-type">Base layer</span>
+            </div>
+            <button class="layer-visibility" title="Toggle visibility">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Drop zone for new images -->
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-zone-content">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            <span>Drop images here or click to upload</span>
+          </div>
+          <div class="drop-zone-footer">
+            <div class="drop-zone-status" id="dropZoneStatus">Demo files</div>
+            <div class="drop-zone-actions" aria-label="Quick test layers">
+              <button type="button" class="drop-zone-btn" data-test-set="01">01</button>
+              <button type="button" class="drop-zone-btn" data-test-set="02">02</button>
+              <button type="button" class="drop-zone-btn" data-test-set="03">03</button>
+              <button type="button" class="drop-zone-btn" data-test-set="04">04</button>
+              <button type="button" class="drop-zone-btn" data-test-set="05">05</button>
+              <button type="button" class="drop-zone-btn" data-test-set="06">06</button>
+              <button type="button" class="drop-zone-btn" data-test-set="07">07</button>
+            </div>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" multiple hidden>
+        </div>
+      </aside>
+
+      <!-- Main View Panel (Preview / Export tabs) -->
+      <section class="panel main-view-panel">
+        <div class="panel-header">
+          <div class="main-view-tabs">
+            <button class="main-view-tab active" data-view="preview">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.1 2.1 0 113 3L8 18l-4 1 1-4 11.5-11.5z"/>
+              </svg>
+              Visual Editor
+            </button>
+            <button class="main-view-tab" data-view="preview-gallery">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <rect x="14" y="14" width="7" height="7" rx="1"/>
+              </svg>
+              Preview
+            </button>
+            <button class="main-view-tab" data-view="export">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 18H8M16 14H8M12 10H8"/>
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <path d="M14 2v6h6"/>
+              </svg>
+              Code
+            </button>
+          </div>
+          <div class="main-view-controls" id="editorControls">
+            <div class="container-width-control">
+              <span class="container-label">Container</span>
+              <div class="container-size-box scrub-label" data-target="containerWidth" data-axis="x">
+                <span class="size-icon">W</span>
+                <input type="number" id="containerWidth" value="768" min="300" max="1200">
+                <span class="unit">px</span>
+              </div>
+              <div class="container-size-box scrub-label" data-target="containerHeight" data-axis="y">
+                <span class="size-icon">H</span>
+                <input type="number" id="containerHeight" value="480" min="300" max="1200">
+                <span class="unit">px</span>
+              </div>
+            </div>
+            <label class="toggle-control">
+              <span class="toggle-label">Flow behind text</span>
+              <input type="checkbox" id="partialFullToggle">
+              <span class="toggle-switch"></span>
+            </label>
+          </div>
+          <div class="main-view-controls preview-controls is-hidden" id="previewControls">
+            <div class="preview-control">
+              <span class="container-label">Maximum width</span>
+              <div class="container-size-box scrub-label" data-target="previewMaxWidth" data-axis="x">
+                <span class="size-icon">W</span>
+                <input type="number" id="previewMaxWidth" value="1280" min="600" max="2400">
+                <span class="unit">px</span>
+              </div>
+            </div>
+            <label class="preview-bg-control">
+              <span>Background</span>
+              <input type="color" id="previewBgColor" value="#F6F5F3">
+            </label>
+            <label class="inline-checkbox">
+              <input type="checkbox" id="previewBentoToggle" checked>
+              <span>Bento</span>
+            </label>
+          </div>
+          
+        </div>
+        
+        <!-- Preview View -->
+        <div class="main-view active" id="previewView">
+          <div class="preview-wrapper">
+            <!-- Full Card Preview with Resize Handles -->
+            <div class="card-preview-wrapper" id="cardPreviewWrapper">
+              <div class="resize-handle resize-top" data-side="top">
+                <div class="handle-bar"></div>
+                <div class="handle-tooltip">Drag to resize</div>
+              </div>
+              <div class="resize-handle resize-left" data-side="left">
+                <div class="handle-bar"></div>
+                <div class="handle-tooltip">Drag to resize</div>
+              </div>
+              <div class="card-preview" id="cardPreview">
+                <!-- Card Header Section -->
+                <div class="card-header-section">
+                  <div class="card-header-content">
+                    <div class="card-category-row">
+                      <input type="text" class="card-category" id="cardCategory" value="REMOTE MONITORING MANAGEMENT" placeholder="Category">
+                      <div class="card-icon" id="cardIcon" title="Click to change icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <rect x="2" y="4" width="20" height="14" rx="2"/>
+                          <path d="M8 20h8M12 18v2"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <textarea class="card-title" id="cardTitle" rows="2" placeholder="Card Title">Full visibility and control with on-device agents</textarea>
+                  </div>
+                </div>
+                
+                <!-- Asset Container Section (the composable area) -->
+                <div class="asset-container-wrapper">
+                  <div class="preview-container" id="previewContainer">
+                    <div class="preview-background" id="previewBackground"></div>
+                    <div class="preview-layers" id="previewLayers">
+                      <!-- Layers rendered here -->
+                    </div>
+                    <!-- Alignment guides -->
+                    <div class="alignment-guides" id="alignmentGuides">
+                      <div class="guide guide-center-h"></div>
+                      <div class="guide guide-center-v"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="resize-handle resize-right" data-side="right">
+                <div class="handle-bar"></div>
+                <div class="handle-tooltip">Drag to resize</div>
+              </div>
+              <div class="resize-handle resize-bottom" data-side="bottom">
+                <div class="handle-bar"></div>
+                <div class="handle-tooltip">Drag to resize</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Gallery View -->
+        <div class="main-view" id="previewGalleryView">
+          <div class="preview-gallery" id="previewGalleryGrid"></div>
+        </div>
+        
+        <!-- Export View -->
+        <div class="main-view" id="exportView">
+          <div class="export-header">
+            <div class="export-format-tabs">
+              <button class="export-format-tab active" data-tab="json">JSON</button>
+              <button class="export-format-tab" data-tab="html">HTML/CSS</button>
+            </div>
+          </div>
+          <div class="export-content">
+            <div class="export-pane active" id="jsonPane">
+              <div class="export-code-wrapper">
+                <pre class="export-code" id="jsonOutput">{
+  "container": { "width": 768 },
+  "background": { "type": "color" },
+  "layers": []
+}</pre>
+              </div>
+              <button class="copy-btn" data-target="jsonOutput">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/>
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                </svg>
+                Copy JSON
+              </button>
+            </div>
+            <div class="export-pane" id="htmlPane">
+              <div class="export-code-wrapper">
+                <pre class="export-code" id="htmlOutput">&lt;!-- HTML/CSS output will appear here --&gt;</pre>
+              </div>
+              <button class="copy-btn" data-target="htmlOutput">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/>
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                </svg>
+                Copy HTML
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Properties Panel -->
+      <aside class="panel properties-panel">
+        <div class="panel-header">
+          <h2>Properties</h2>
+        </div>
+        <div class="panel-content" id="propertiesContent">
+          <!-- Empty state -->
+          <div class="empty-state" id="emptyState">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M12 8v8M8 12h8"/>
+            </svg>
+            <p>Select a layer to edit its properties</p>
+          </div>
+          
+          <!-- Background properties -->
+          <div class="properties-section" id="bgProperties" style="display: none;">
+            <h3>Background</h3>
+            
+            <div class="property-group">
+              <label>Type</label>
+              <div class="button-group">
+                <button class="toggle-btn active" data-bg-type="color">Color</button>
+                <button class="toggle-btn" data-bg-type="gradient">Gradient</button>
+                <button class="toggle-btn" data-bg-type="image">Image</button>
+                <button class="toggle-btn" data-bg-type="tile">Tile</button>
+              </div>
+            </div>
+            
+            <div class="property-group" id="bgColorGroup">
+              <label for="bgColor">Color</label>
+              <div class="color-input-wrapper">
+                <input type="color" id="bgColor" value="#f5f5f5">
+                <input type="text" id="bgColorHex" value="#f5f5f5" class="color-hex-input">
+              </div>
+            </div>
+            
+            <div class="property-group" id="bgGradientGroup" style="display: none;">
+              <label for="bgGradient">Gradient</label>
+              <div class="gradient-inputs">
+                <input type="color" id="bgGradientStart" value="#8b5cf6">
+                <span class="gradient-arrow">→</span>
+                <input type="color" id="bgGradientEnd" value="#d946ef">
+              </div>
+              <select id="bgGradientDirection">
+                <option value="to right">Horizontal</option>
+                <option value="to bottom">Vertical</option>
+                <option value="to bottom right">Diagonal ↘</option>
+                <option value="to bottom left">Diagonal ↙</option>
+              </select>
+            </div>
+            
+            <div class="property-group" id="bgImageGroup" style="display: none;">
+              <label>Image</label>
+              <div class="image-upload-area" id="bgImageUpload">
+                <span>Click to upload background</span>
+              </div>
+              <input type="file" id="bgImageInput" accept="image/*" hidden>
+              <div class="property-row" id="bgSizingRow" style="display: none;">
+                <label>Sizing</label>
+                <div class="button-group">
+                  <button class="toggle-btn active" data-sizing="fill">Fill</button>
+                  <button class="toggle-btn" data-sizing="fit">Fit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Layer properties -->
+          <div class="properties-section" id="layerProperties" style="display: none;">
+            <h3>Layer: <span id="layerName">-</span></h3>
+            
+            <div class="property-group">
+              <label>Image</label>
+              <div class="image-preview-small" id="layerImagePreview">
+                <span>No image</span>
+              </div>
+              <button class="btn btn-small btn-secondary" id="replaceImageBtn">Replace Image</button>
+              <input type="file" id="replaceImageInput" accept="image/*" hidden>
+            </div>
+            
+            <div class="property-divider"></div>
+            
+            <h4>Position</h4>
+            <div class="position-section">
+              <div class="position-inputs">
+                <div class="position-input">
+                  <span class="position-label scrub-handle" data-target="xPosition" data-axis="x" title="Drag to adjust">X</span>
+                  <input type="number" id="xPosition" value="0">
+                </div>
+                <div class="position-input">
+                  <span class="position-label scrub-handle" data-target="yPosition" data-axis="y" title="Drag to adjust">Y</span>
+                  <input type="number" id="yPosition" value="0">
+                </div>
+                <button class="position-center-btn" id="centerLayerBtn" title="Center layer">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2.5" y="2.5" width="11" height="11" rx="2"/>
+                    <path d="M8 4v8M4 8h8"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="position-constraints-row">
+                <div class="position-constraints">
+                  <div class="constraint-select">
+                    <span class="constraint-icon">
+                      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M3 8h10M3 4v8"/>
+                      </svg>
+                    </span>
+                    <select id="xAlign">
+                      <option value="left">Left</option>
+                      <option value="right">Right</option>
+                      <option value="left+right">Left + Right (Stretch)</option>
+                      <option value="center">Center</option>
+                      <option value="scale">Scale</option>
+                    </select>
+                  </div>
+                  <div class="constraint-select">
+                    <span class="constraint-icon">
+                      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M8 3v10M4 3h8"/>
+                      </svg>
+                    </span>
+                    <select id="yAlign">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                      <option value="top+bottom">Top + Bottom (Stretch)</option>
+                      <option value="center">Center</option>
+                      <option value="scale">Scale</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="position-grid" id="positionGrid">
+                  <button class="position-grid-btn" data-x="left" data-y="top" title="Top left"><span class="grid-dot"></span></button>
+                  <button class="position-grid-btn" data-x="center" data-y="top" title="Top center"><span class="grid-dot"></span></button>
+                  <button class="position-grid-btn" data-x="right" data-y="top" title="Top right"><span class="grid-dot"></span></button>
+                  <button class="position-grid-btn" data-x="left" data-y="center" title="Center left"><span class="grid-dot"></span></button>
+                  <button class="position-grid-btn" data-x="center" data-y="center" title="Center"><span class="grid-dot"></span></button>
+                  <button class="position-grid-btn" data-x="right" data-y="center" title="Center right"><span class="grid-dot"></span></button>
+                  <button class="position-grid-btn" data-x="left" data-y="bottom" title="Bottom left"><span class="grid-dot"></span></button>
+                  <button class="position-grid-btn" data-x="center" data-y="bottom" title="Bottom center"><span class="grid-dot"></span></button>
+                  <button class="position-grid-btn" data-x="right" data-y="bottom" title="Bottom right"><span class="grid-dot"></span></button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="property-divider"></div>
+            
+            <h4>Dimensions</h4>
+            <div class="property-group">
+              <div class="dimension-toggles">
+                <label class="inline-checkbox" for="autoWidth">
+                  <input type="checkbox" id="autoWidth" checked>
+                  <span>Auto width</span>
+                </label>
+                <label class="inline-checkbox" for="autoHeight">
+                  <input type="checkbox" id="autoHeight" checked>
+                  <span>Auto height</span>
+                </label>
+                <label class="inline-checkbox" for="retinaScale">
+                  <input type="checkbox" id="retinaScale">
+                  <span>Retina</span>
+                </label>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-group half">
+                <label for="layerWidth">Width</label>
+                <div class="scrub-input full">
+                  <span class="scrub-handle" data-target="layerWidth" data-axis="x" title="Drag to adjust">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M8 5l-5 7 5 7M16 5l5 7-5 7"/>
+                      <path d="M3 12h18"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="layerWidth" placeholder="auto">
+                </div>
+              </div>
+              <div class="property-group half">
+                <label for="layerHeight">Height</label>
+                <div class="scrub-input full">
+                  <span class="scrub-handle" data-target="layerHeight" data-axis="y" title="Drag to adjust">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M5 8l7-5 7 5M5 16l7 5 7-5"/>
+                      <path d="M12 3v18"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="layerHeight" placeholder="auto">
+                </div>
+              </div>
+            </div>
+            <div class="property-group">
+              <label for="layerScale">Scale</label>
+              <div class="scale-row">
+                <select id="scalePreset">
+                  <option value="1">1x (Standard)</option>
+                  <option value="0.5">0.5x (Retina)</option>
+                  <option value="2">2x</option>
+                  <option value="3">3x</option>
+                  <option value="custom">Custom</option>
+                </select>
+                <div class="scrub-input">
+                  <span class="scrub-handle" data-target="layerScale" data-axis="x" title="Drag to adjust">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M8 5l-5 7 5 7M16 5l5 7-5 7"/>
+                      <path d="M3 12h18"/>
+                    </svg>
+                  </span>
+                  <input type="number" id="layerScale" value="1" step="0.1" min="0.1">
+                </div>
+                <select id="scaleTarget">
+                  <option value="both">Both</option>
+                  <option value="width">Width only</option>
+                  <option value="height">Height only</option>
+                </select>
+                <button class="btn btn-small btn-secondary" id="resetScaleBtn" type="button">Reset</button>
+              </div>
+            </div>
+            <div class="property-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="aspectRatioLocked" checked>
+                <span>Lock aspect ratio</span>
+              </label>
+            </div>
+            
+            <div class="property-divider"></div>
+            
+            <h4>Animation Speed</h4>
+            <div class="property-group">
+              <div class="segmented-control" id="animSpeed" role="group" aria-label="Animation speed">
+                <button class="segmented-button" type="button" data-anim-speed="0">
+                  <span class="segmented-main">00 Background</span>
+                  <span class="segmented-sub">0px</span>
+                </button>
+                <button class="segmented-button" type="button" data-anim-speed="1">
+                  <span class="segmented-main">01 Bottom</span>
+                  <span class="segmented-sub">5px</span>
+                </button>
+                <button class="segmented-button" type="button" data-anim-speed="2">
+                  <span class="segmented-main">02 Mid</span>
+                  <span class="segmented-sub">10px</span>
+                </button>
+                <button class="segmented-button" type="button" data-anim-speed="3">
+                  <span class="segmented-main">03 Top</span>
+                  <span class="segmented-sub">15px</span>
+                </button>
+              </div>
+            </div>
+            
+            <div class="property-divider"></div>
+            
+            <h4>Layer Order</h4>
+            <div class="property-group">
+              <label for="zIndex">Z-Index</label>
+              <select id="zIndex">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+              </select>
+            </div>
+            
+            <div class="property-divider"></div>
+            
+            <button class="btn btn-danger btn-full" id="deleteLayerBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+              </svg>
+              Delete Layer
+            </button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+  </div>
+
+  <script src="../lib/layer-manager.js"></script>
+  <script src="../lib/preview-renderer.js"></script>
+  <script src="../lib/exporter.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

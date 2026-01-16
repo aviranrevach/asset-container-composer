@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Asset Container Composer",
+  "version": "1.0.0",
+  "description": "Visual tool for composing image layouts in asset containers with positioning, alignment, and parallax layer configuration",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png"
+    }
+  },
+  "permissions": [
+    "storage"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["composer/*", "composer/test-layers/*", "lib/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
